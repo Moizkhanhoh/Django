@@ -1,0 +1,81 @@
+open window power shell in that folder where u want project 
+
+1) django-admin startproject projectname
+2) then open vs code
+3) pyhton manage.py makemigrations
+4) python manage.py migrate
+5) python manage.py startapp  home 
+***********************************************************************************
+
+NOw we will register our app
+
+1)open app.py and copy app name 
+
+2)open your setting->installed app
+"home.apps.paste-name",
+
+*******************************************************************************
+NOW create 2 folder static folder and template folder 
+
+in static folder we save pics etc
+in template folder we make HTML files ... eg index.html ,about.html
+ 
+1) go to setting  and set static DIR 
+
+STATICFILES_DIRS = [
+	os.path.join(BASE_DIR,"static")]
+
+2) now set template DIR
+
+setting->templates
+DIR : [os.path.join(BASE_DIR,"templates")]
+
+NOw in template make a file index.html
+
+***********************************************************************
+
+Now go to urls.py and give path and also import include
+
+path('',include('home.urls')),
+***********************************************************************************
+
+NOw in home folder create  urls.py 
+
+from django.contrib import admin
+from django.urls import path,include
+
+
+urlpatterns = [
+    path("",views.index,name="home"),
+    path("",views.login,name="login"),
+
+]
+******************************************************************************
+Now in views.py we will make function
+
+def index(request):
+     render(request,'index.html')
+    
+    
+def login(request):
+     render(request,'login.html')
+
+def logout(request):
+     render(request,'logout.html'
+
+*******************************************************************************
+for admin create a passward and username by this command
+python manage.py createsuperuser
+
+
+
+
+
+****************************************************************************
+
+now for login page .. 
+open bootstrap and copy code and paste in login.html
+
+then make form method='post' action='/login'
+
+
