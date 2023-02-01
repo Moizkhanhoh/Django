@@ -1,0 +1,184 @@
+open window power shell in that folder where u want project 
+
+1) django-admin startproject projectname
+2) then open vs code
+3) pyhton manage.py makemigrations
+4) python manage.py migrate
+5) python manage.py startapp  home 
+***********************************************************************************
+
+NOw we will register our app
+
+1)open app.py and copy app name 
+
+2)open your setting->installed app
+"home.apps.paste-name",
+
+*******************************************************************************
+NOW create 2 folder static folder and template folder 
+
+in static folder we save pics etc
+in template folder we make HTML files ... eg index.html ,about.html
+ 
+1) go to setting  and set static DIR 
+
+STATICFILES_DIRS = [
+	os.path.join(BASE_DIR,"static")]
+
+2) now set template DIR
+
+setting->templates
+DIR : [os.path.join(BASE_DIR,"templates")]
+
+NOw in template make a file index.html
+
+***********************************************************************
+
+Now go to urls.py and give path and also import include
+
+path('',include('home.urls')),
+***********************************************************************************
+
+NOw in home folder create  urls.py 
+
+from django.contrib import admin
+from django.urls import path,include
+
+
+urlpatterns = [
+    path("",views.index,name="home"),
+    path("",views.login,name="login"),
+
+]
+******************************************************************************
+Now in views.py we will make function
+
+def index(request):
+     render(request,'index.html')
+
+
+*******************************************************************************
+for admin create a passward and username by this command
+python manage.py createsuperuser
+
+*******************************************************************************
+
+In Model:
+
+in model we create table  and we make filed like name , email,adress, phone 
+class Employees(models.Model):
+    name=models.CharField(max_length=50)
+    email=models.EmailField(max_length=254)
+    address=models.TextField()
+    phone=models.IntegerField()
+
+
+8*************************************************************************************
+
+now run make migration command
+
+python manage.py makemigration 
+
+pyton manage.py migrate
+*********************************
+NOw register ur model .
+ go to admin.py
+
+from .models import *
+admin.site.register(Employees)
+
+
+************************************************************************************************
+ 
+NOw we will read data of database and will show it on  home page
+
+# Create your views here.
+def index(request):
+    emp = Employees.objects.all() #  by this query it will retrive all objects
+    
+    context = {    
+        'emp':emp,  
+    }
+    return render(request,"index.html",context)
+
+and in index.html we wil write for loop{% for i in emp %} 
+ <td>{{ i.name }}</td>
+<td>{{i.email}}</td>
+<td>{{i.address}}</td>
+ <td>{{i.phone}}</td>    #  by this loop it will show all objects list on indext mean home page
+*********************************************************************************************************
+
+NOw we will perform read operation mean ADD new Employee
+**************************************************************************************************
+make add function in view 
+
+def ADD(request):
+    if request.method=="POST":               #get name email phone .
+        name= request.POST.get('name')
+        email= request.POST.get('email')
+        address= request.POST.get('address')
+        phone= request.POST.get('phone')
+        
+        emp =Employees(                                ... save all things in emp
+            
+            name=name,#1st red name is from database name
+            email=email, #2nd green name is  our input name in index file
+            address= address,
+            phone=phone
+        )
+        emp.save()
+        return redirect('home')
+ S
+***********************************************************************8888
+now give path in URL 
+urlpatterns = [
+    path("",views.index,name="home"),
+    path("add",views.ADD,name="add"),
+    # path("logout",views.logoutuser,name="logout"),
+]
+***************************************************************
+Do this in add form
+<form  action="{% url 'add' %}"   method="post">  
+                    {% csrf_token %}
+
+***********************************************************************
+now  we will create edit 
+1)first give path in url.py 
+than make function in view.py
+def EDIT(request):
+    emp=Employees.objects.all()
+    
+    context = {
+        'emp':emp,
+    }
+    return redirect  (request,"index.html",context)
+
+
+***************************************************************
+
+update .. function is same as create function but in update u will also write id
+
+def UPDATE(request,id):
+    if request.method=="POST":
+        name= request.POST.get("name")
+        email= request.POST.get("email")
+        address= request.POST.get("address")
+        phone= request.POST.get("phone")
+        
+        emp=Employees(
+            id=id,
+            name=name,
+            email=email,
+            address=address,
+            phone=phone,
+        )
+        emp.save()
+        return redirect('home')
+    return redirect(request,"index.html")
+
+*********************************************************************
+
+
+
+
+
